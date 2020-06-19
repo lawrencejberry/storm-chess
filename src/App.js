@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Game from "./components/Game";
+import Board from "./components/Board";
 
 const Header = styled.header`
   display: flex;
@@ -29,7 +29,7 @@ function App() {
         <div>Storm Chess</div>
       </Header>
       <Main>
-        <Game />
+        <Board />
       </Main>
     </div>
   );

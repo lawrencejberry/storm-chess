@@ -8,7 +8,7 @@ const possibleMoveStyle = {
   borderRadius: "50%",
 };
 
-function Game() {
+export default function Board() {
   const [position, setPosition] = useState("start");
   const [squareStyles, setSquareStyles] = useState({});
 
@@ -34,5 +34,3 @@ function Game() {
     />
   );
 }
-
-export default Game;
