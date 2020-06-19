@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Chessboard from "chessboardjsx";
 
-import getPossibleMoves from "../logic/getPossibleMoves";
-import makeMove from "../logic/makeMove";
-import getBoardPosition from "../logic/getBoardPosition";
+import StormChess from "../logic/StormChess";
 
 const possibleMoveStyle = {
   background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
@@ -11,12 +9,11 @@ const possibleMoveStyle = {
 };
 
 export default function Board() {
-  const [position, setPosition] = useState("start");
+  const [game] = useState(new StormChess());
   const [squareStyles, setSquareStyles] = useState({});
-  const [history, setHistory] = useState([]);
 
   const onMouseOverSquare = (square) => {
-    const possibleMoves = getPossibleMoves(square);
+    const possibleMoves = game.moves();
     setSquareStyles(
       Object.fromEntries(
         possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
@@ -29,19 +26,13 @@ export default function Board() {
   };
 
   const onDrop = ({ sourceSquare, targetSquare }) => {
-    const isMoveValid = makeMove(sourceSquare, targetSquare);
-    if (isMoveValid) {
-      setPosition(getBoardPosition());
-      setHistory(({ history, sourceSquare, targetSquare }) => [
-        ...history,
-        [sourceSquare, targetSquare],
-      ]);
-    }
+    const move = game.move({ sourceSquare, targetSquare });
+    if (move === null) return;
   };
 
   return (
     <Chessboard
-      position={position}
+      position={game.fen()}
       squareStyles={squareStyles}
       onMouseOverSquare={onMouseOverSquare}
       onMouseOutSquare={onMouseOutSquare}
