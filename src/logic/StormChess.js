@@ -2,8 +2,17 @@ import Chess from "chess.js";
 
 const BaseChess = new Chess();
 
+const stormTurns = [15, 25, 35, 45, 55];
+
 const StormChess = function () {
-  // Variables shared amongst functions go here
+  // Private properties shared amongst StormChess methods go here
+  let stormLevel = 0; // Use this to index stormTurns to find the turns at which the next storm will arrive
+
+  // Private methods used in the public methods below go here
+  function getPlayableSquares() {
+    return null;
+  }
+
   return {
     ...BaseChess,
     in_checkmate: function () {
