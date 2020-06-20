@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Chessboard from "chessboardjsx";
 
 import StormChess from "../logic/StormChess";
@@ -12,8 +12,14 @@ export default function Board() {
   const [game] = useState(new StormChess());
   const [squareStyles, setSquareStyles] = useState({});
 
+  useEffect(() => {
+    if (game.stormLevel === 1) {
+      // Perform zap animation and modify square styles to show that the rows or columns are out of bound
+    }
+  }, [game.stormLevel]);
+
   const onMouseOverSquare = (square) => {
-    const possibleMoves = game.moves();
+    const possibleMoves = game.moves(square);
     setSquareStyles(
       Object.fromEntries(
         possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])

@@ -2,7 +2,7 @@ import Chess from "chess.js";
 
 const BaseChess = new Chess();
 
-const stormTurns = [15, 25, 35, 45, 55];
+const stormTurns = [15, 25, 35, 45];
 
 const StormChess = function () {
   // Private properties shared amongst StormChess methods go here
@@ -25,12 +25,14 @@ const StormChess = function () {
     },
     move: function ({ sourceSquare, targetSquare }) {
       // Attempts to make a move on the board, returning a move object if the move was legal and null if illegal.
+      // Check the number of turns and wipe rows or columns as necessary, then increment stormLevel
       return null;
     },
     moves: function (square) {
       // Returns a list of legal moves from the selected square.
       return null;
     },
+    stormLevel: stormLevel,
   };
 };
 
