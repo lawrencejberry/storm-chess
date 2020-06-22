@@ -8,6 +8,8 @@ const StormChess = function () {
   // Private properties shared amongst StormChess methods go here
   let stormLevel = 0; // Use this to index stormTurns to find the turns at which the next storm will arrive
 
+  let liveSquares = ["a1", "a2"]; //etc
+
   // Private methods used in the public methods below go here
   function getPlayableSquares() {
     return null;
