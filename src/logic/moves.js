@@ -11,6 +11,7 @@ function moves(Square) {
       starter = 20 - stormLevel * 4;
     }
     const nonPlayableSquares = playableSquares.splice(0, starter);
+    //Does this actually affect the value of playableSquares?
 
     // Then check if King is in the non playable region
     if (
