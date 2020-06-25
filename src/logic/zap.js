@@ -5,8 +5,8 @@ function zap(){
     }
     for(i = 0; i < removeCount; i++){
         BaseChess.remove(liveSquares[0]);
-        liveSquares.shift();
     }
+    let zappedSquares = liveSquares.splice(0, removeCount)
     stormLevel += 1;
     //Run the animation... should that be part of this function, or a different function?
     //Need the display to change as well, so that zapped squares don't show
