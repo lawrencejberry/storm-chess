@@ -18,4 +18,5 @@ function move(startSquare, endSquare) {
       }
     }
   }
+  gameOver = game_over();
 }
