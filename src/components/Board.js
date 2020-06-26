@@ -32,7 +32,10 @@ export default function Board() {
   };
 
   const onDrop = ({ sourceSquare, targetSquare }) => {
-    const move = game.move({ sourceSquare, targetSquare });
+    const move = game.move({
+      sourceSquare: sourceSquare,
+      targetSquare: targetSquare,
+    });
     if (move === null) return;
   };
 
