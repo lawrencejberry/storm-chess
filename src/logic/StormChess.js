@@ -104,7 +104,7 @@ const StormChess = function () {
     for (let i = 0; i < removeCount; i++) {
       BaseChess.remove(liveSquares[i]);
     }
-    zappedSquares = liveSquares.splice(0, removeCount);
+    zappedSquares.concat(liveSquares.splice(0, removeCount));
     stormLevel += 1;
   }
 
