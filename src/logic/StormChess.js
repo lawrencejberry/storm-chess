@@ -12,6 +12,7 @@ const StormChess = function () {
   let gameOver = false;
   let liveSquares = squares;
   let zappedSquares = [];
+  let turn = 0;
 
   // Methods
   function game_over() {
@@ -20,8 +21,7 @@ const StormChess = function () {
       BaseChess.half_moves >= 100 ||
       in_checkmate() ||
       BaseChess.in_stalemate() ||
-      BaseChess.insufficient_material() ||
-      BaseChess.in_threefold_repetition()
+      BaseChess.insufficient_material()
     );
   }
 
@@ -41,9 +41,11 @@ const StormChess = function () {
     var promotionLevel = Math.floor(stormLevel / 2);
     if (moves(sourceSquare).includes(targetSquare)) {
       BaseChess.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
+      turn += 0.5;
       if (
-        targetSquare.includes((promotionLevel + 1).toString()) ||
-        targetSquare.includes((8 - promotionLevel).toString())
+        stormLevel > 1 &&
+        (targetSquare.includes((promotionLevel + 1).toString()) ||
+          targetSquare.includes((8 - promotionLevel).toString()))
       ) {
         const piece = BaseChess.get(targetSquare);
         if (piece && piece.type === "p") {
@@ -51,7 +53,7 @@ const StormChess = function () {
           BaseChess.put({ type: "q", color: movingSide }, targetSquare);
         }
       }
-      if (stormTurns.includes(BaseChess.history().length / 2)) {
+      if (stormTurns.includes(turn)) {
         zap();
       }
       gameOver = game_over();
@@ -61,12 +63,8 @@ const StormChess = function () {
   function moves(square) {
     // Returns a list of legal moves from the selected square.
     const stormMoves = [];
-    // Turns = length of BaseChess history array
     let playableSquares = liveSquares.slice(); // Must copy the liveSquares array by value rather than reference it
-    if (
-      Math.floor(BaseChess.history().length / 2) + 1 ===
-      stormTurns[stormLevel]
-    ) {
+    if (Math.floor(turn) + 1 === stormTurns[stormLevel]) {
       let starter = 16 - stormLevel * 4;
       if (stormLevel >= 2) {
         starter = 20 - stormLevel * 4;
