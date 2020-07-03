@@ -12,7 +12,7 @@ const Header = styled.header`
 
 const Main = styled.main`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   margin: 16px;
 `;

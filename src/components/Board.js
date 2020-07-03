@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Chessboard from "chessboardjsx";
 
-import StormChess from "../logic/StormChess";
+import StormChess, { stormTurns } from "../logic/StormChess";
 
 const possibleMoveStyle = {
   background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
@@ -13,27 +13,32 @@ const zappedSquareStyle = {
   opacity: "70%",
 };
 
-const squareStyling = ({ possibleMoves, zappedSquares }) => {
-  return {
-    ...Object.fromEntries(
-      possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
-    ),
-    ...Object.fromEntries(
-      zappedSquares.map((zappedSquare) => [zappedSquare, zappedSquareStyle])
-    ),
-  };
-};
+const game = new StormChess();
 
 export default function Board() {
-  const [game] = useState(new StormChess());
+  const [status, setStatus] = useState(game.status());
   const [position, setPosition] = useState("start");
   const [squareStyles, setSquareStyles] = useState({});
+  const [orientation, setOrientation] = useState("white");
+
+  const squareStyling = ({ possibleMoves }) => {
+    return {
+      ...Object.fromEntries(
+        possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
+      ),
+      ...Object.fromEntries(
+        status.zappedSquares.map((zappedSquare) => [
+          zappedSquare,
+          zappedSquareStyle,
+        ])
+      ),
+    };
+  };
 
   const onMouseOverSquare = (square) => {
     setSquareStyles(
       squareStyling({
         possibleMoves: game.moves(square),
-        zappedSquares: game.zappedSquares,
       })
     );
   };
@@ -42,7 +47,6 @@ export default function Board() {
     setSquareStyles(
       squareStyling({
         possibleMoves: [],
-        zappedSquares: game.zappedSquares,
       })
     );
   };
@@ -54,21 +58,40 @@ export default function Board() {
     });
     if (move === null) return;
     setPosition(game.fen());
+    setStatus(game.status());
     setSquareStyles(
       squareStyling({
         possibleMoves: [],
-        zappedSquares: game.zappedSquares,
       })
     );
   };
 
   return (
-    <Chessboard
-      position={position}
-      squareStyles={squareStyles}
-      onMouseOverSquare={onMouseOverSquare}
-      onMouseOutSquare={onMouseOutSquare}
-      onDrop={onDrop}
-    />
+    <>
+      <Chessboard
+        position={position}
+        squareStyles={squareStyles}
+        onMouseOverSquare={onMouseOverSquare}
+        onMouseOutSquare={onMouseOutSquare}
+        onDrop={onDrop}
+        orientation={orientation}
+      />
+      <div>
+        <p>Turn: {Math.floor(status.turn)}</p>
+        <p>
+          Turns until next storm:{" "}
+          {stormTurns[status.stormLevel] - Math.floor(status.turn)}
+        </p>
+        <p>Player to move: {game.turn() === "b" ? "Black" : "White"}</p>
+        <button
+          type="button"
+          onClick={() =>
+            setOrientation(orientation === "white" ? "black" : "white")
+          }
+        >
+          Flip board
+        </button>
+      </div>
+    </>
   );
 }

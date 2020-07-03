@@ -4,7 +4,7 @@ import squares from "./squares.js";
 
 const BaseChess = new Chess();
 
-const stormTurns = [2, 25, 35, 45];
+export const stormTurns = [15, 25, 35, 45];
 
 const StormChess = function () {
   // Attributes
@@ -108,19 +108,22 @@ const StormChess = function () {
     stormLevel += 1;
   }
 
+  function status() {
+    return {
+      stormLevel: stormLevel,
+      gameOver: gameOver,
+      liveSquares: liveSquares,
+      zappedSquares: zappedSquares,
+      turn: turn,
+    };
+  }
+
   // Public API
   return {
     ...BaseChess,
-    in_checkmate: in_checkmate,
-    game_over: game_over,
     move: move,
     moves: moves,
-    zap: zap,
-    stormLevel: stormLevel,
-    gameOver: gameOver,
-    liveSquares: liveSquares,
-    zappedSquares: zappedSquares,
-    turn: turn,
+    status: status,
   };
 };
 
