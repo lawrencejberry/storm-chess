@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Chessboard from "chessboardjsx";
 
 import StormChess from "../logic/StormChess";
@@ -9,8 +9,19 @@ const possibleMoveStyle = {
 };
 
 const zappedSquareStyle = {
-  background: "radial-gradient(circle, #000000 36%, transparent 40%)",
-  borderRadius: "50%",
+  background: "#003366",
+  opacity: "70%",
+};
+
+const squareStyling = ({ possibleMoves, zappedSquares }) => {
+  return {
+    ...Object.fromEntries(
+      possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
+    ),
+    ...Object.fromEntries(
+      zappedSquares.map((zappedSquare) => [zappedSquare, zappedSquareStyle])
+    ),
+  };
 };
 
 export default function Board() {
@@ -18,30 +29,22 @@ export default function Board() {
   const [position, setPosition] = useState("start");
   const [squareStyles, setSquareStyles] = useState({});
 
-  useEffect(() => {
-    // Perform zap animation and modify square styles to show that the rows or columns are out of bound
-  }, [game.stormLevel]);
-
-  const squareStyling = ({ possibleMoves }) => {
-    return {
-      ...Object.fromEntries(
-        possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
-      ),
-      ...Object.fromEntries(
-        game.zappedSquares.map((zappedSquare) => [
-          zappedSquare,
-          zappedSquareStyle,
-        ])
-      ),
-    };
-  };
-
   const onMouseOverSquare = (square) => {
-    setSquareStyles(squareStyling({ possibleMoves: game.moves(square) }));
+    setSquareStyles(
+      squareStyling({
+        possibleMoves: game.moves(square),
+        zappedSquares: game.zappedSquares,
+      })
+    );
   };
 
   const onMouseOutSquare = () => {
-    setSquareStyles(squareStyling({ possibleMoves: [] }));
+    setSquareStyles(
+      squareStyling({
+        possibleMoves: [],
+        zappedSquares: game.zappedSquares,
+      })
+    );
   };
 
   const onDrop = ({ sourceSquare, targetSquare }) => {
@@ -51,7 +54,12 @@ export default function Board() {
     });
     if (move === null) return;
     setPosition(game.fen());
-    setSquareStyles({ possibleMoves: [] });
+    setSquareStyles(
+      squareStyling({
+        possibleMoves: [],
+        zappedSquares: game.zappedSquares,
+      })
+    );
   };
 
   return (

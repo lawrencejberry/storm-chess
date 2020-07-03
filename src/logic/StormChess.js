@@ -4,7 +4,7 @@ import squares from "./squares.js";
 
 const BaseChess = new Chess();
 
-const stormTurns = [15, 25, 35, 45];
+const stormTurns = [2, 25, 35, 45];
 
 const StormChess = function () {
   // Attributes
@@ -104,7 +104,7 @@ const StormChess = function () {
     for (let i = 0; i < removeCount; i++) {
       BaseChess.remove(liveSquares[i]);
     }
-    zappedSquares.concat(liveSquares.splice(0, removeCount));
+    zappedSquares.push(...liveSquares.splice(0, removeCount));
     stormLevel += 1;
   }
 
