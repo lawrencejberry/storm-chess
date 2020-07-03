@@ -8,27 +8,40 @@ const possibleMoveStyle = {
   borderRadius: "50%",
 };
 
+const zappedSquareStyle = {
+  background: "radial-gradient(circle, #000000 36%, transparent 40%)",
+  borderRadius: "50%",
+};
+
 export default function Board() {
   const [game] = useState(new StormChess());
+  const [position, setPosition] = useState("start");
   const [squareStyles, setSquareStyles] = useState({});
 
   useEffect(() => {
-    if (game.stormLevel === 1) {
-      // Perform zap animation and modify square styles to show that the rows or columns are out of bound
-    }
+    // Perform zap animation and modify square styles to show that the rows or columns are out of bound
   }, [game.stormLevel]);
 
-  const onMouseOverSquare = (square) => {
-    const possibleMoves = game.moves(square);
-    setSquareStyles(
-      Object.fromEntries(
+  const squareStyling = ({ possibleMoves }) => {
+    return {
+      ...Object.fromEntries(
         possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
-      )
-    );
+      ),
+      ...Object.fromEntries(
+        game.zappedSquares.map((zappedSquare) => [
+          zappedSquare,
+          zappedSquareStyle,
+        ])
+      ),
+    };
+  };
+
+  const onMouseOverSquare = (square) => {
+    setSquareStyles(squareStyling({ possibleMoves: game.moves(square) }));
   };
 
   const onMouseOutSquare = () => {
-    setSquareStyles({});
+    setSquareStyles(squareStyling({ possibleMoves: [] }));
   };
 
   const onDrop = ({ sourceSquare, targetSquare }) => {
@@ -37,11 +50,13 @@ export default function Board() {
       targetSquare: targetSquare,
     });
     if (move === null) return;
+    setPosition(game.fen());
+    setSquareStyles({ possibleMoves: [] });
   };
 
   return (
     <Chessboard
-      position={game.fen()}
+      position={position}
       squareStyles={squareStyles}
       onMouseOverSquare={onMouseOverSquare}
       onMouseOutSquare={onMouseOutSquare}

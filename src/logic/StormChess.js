@@ -120,6 +120,7 @@ const StormChess = function () {
     gameOver: gameOver,
     liveSquares: liveSquares,
     zappedSquares: zappedSquares,
+    turn: turn,
   };
 };
 
