@@ -22,6 +22,7 @@ export default function Board() {
   const [position, setPosition] = useState("start");
   const [squareStyles, setSquareStyles] = useState({});
   const [orientation, setOrientation] = useState("white");
+  const [autoFlipOn, setAutoFlipOn] = useState(false);
 
   const squareStyling = ({ possibleMoves }) => {
     return {
@@ -66,6 +67,9 @@ export default function Board() {
         possibleMoves: [],
       })
     );
+    if (autoFlipOn) {
+      setOrientation(game.status().playerToMove === "b" ? "black" : "white");
+    }
   };
 
   return (
@@ -84,6 +88,8 @@ export default function Board() {
         status={status}
         orientation={orientation}
         setOrientation={setOrientation}
+        autoFlipOn={autoFlipOn}
+        setAutoFlipOn={setAutoFlipOn}
         resetBoard={() => {
           game.reset();
           setPosition(game.fen());

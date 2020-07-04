@@ -6,7 +6,7 @@ import { Board } from "./components";
 function App() {
   return (
     <BaseStyles>
-      <Heading fontSize={24} margin={2} textAlign="center">
+      <Heading fontSize={24} margin={4} textAlign="center">
         Storm Chess
       </Heading>
       <Board />

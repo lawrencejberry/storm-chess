@@ -115,7 +115,7 @@ const StormChess = function () {
       liveSquares: liveSquares,
       zappedSquares: zappedSquares,
       turn: turn,
-      playerToMove: BaseChess.turn() === "b" ? "Black" : "White",
+      playerToMove: BaseChess.turn(),
     };
   }
 
