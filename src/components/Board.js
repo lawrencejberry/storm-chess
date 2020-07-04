@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Chessboard from "chessboardjsx";
+import { Flex, BorderBox } from "@primer/components";
 
-import StormChess, { stormTurns } from "../logic/StormChess";
+import StormChess from "../logic/StormChess";
+import { Panel } from "../components";
 
 const possibleMoveStyle = {
   background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
@@ -67,31 +69,32 @@ export default function Board() {
   };
 
   return (
-    <>
-      <Chessboard
-        position={position}
-        squareStyles={squareStyles}
-        onMouseOverSquare={onMouseOverSquare}
-        onMouseOutSquare={onMouseOutSquare}
-        onDrop={onDrop}
+    <Flex flex={1} flexDirection="row" justifyContent="center">
+      <BorderBox>
+        <Chessboard
+          position={position}
+          squareStyles={squareStyles}
+          onMouseOverSquare={onMouseOverSquare}
+          onMouseOutSquare={onMouseOutSquare}
+          onDrop={onDrop}
+          orientation={orientation}
+        />
+      </BorderBox>
+      <Panel
+        status={status}
         orientation={orientation}
+        setOrientation={setOrientation}
+        resetBoard={() => {
+          game.reset();
+          setPosition(game.fen());
+          setStatus(game.status());
+          setSquareStyles(
+            squareStyling({
+              possibleMoves: [],
+            })
+          );
+        }}
       />
-      <div>
-        <p>Turn: {Math.floor(status.turn)}</p>
-        <p>
-          Turns until next storm:{" "}
-          {stormTurns[status.stormLevel] - Math.floor(status.turn)}
-        </p>
-        <p>Player to move: {game.turn() === "b" ? "Black" : "White"}</p>
-        <button
-          type="button"
-          onClick={() =>
-            setOrientation(orientation === "white" ? "black" : "white")
-          }
-        >
-          Flip board
-        </button>
-      </div>
-    </>
+    </Flex>
   );
 }

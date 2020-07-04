@@ -115,7 +115,17 @@ const StormChess = function () {
       liveSquares: liveSquares,
       zappedSquares: zappedSquares,
       turn: turn,
+      playerToMove: BaseChess.turn() === "b" ? "Black" : "White",
     };
+  }
+
+  function reset() {
+    BaseChess.reset();
+    stormLevel = 0;
+    gameOver = false;
+    liveSquares = squares;
+    zappedSquares = [];
+    turn = 0;
   }
 
   // Public API
@@ -124,6 +134,7 @@ const StormChess = function () {
     move: move,
     moves: moves,
     status: status,
+    reset: reset,
   };
 };
 
