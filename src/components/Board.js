@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Chessboard from "chessboardjsx";
 import { Flex, BorderBox } from "@primer/components";
 
 import StormChess from "../logic/StormChess";
 import { Panel } from "../components";
+import lightningImage from "../images/lightning.png";
 
 const possibleMoveStyle = {
   background: "radial-gradient(circle, #fffc00 36%, transparent 40%)",
@@ -15,43 +16,52 @@ const zappedSquareStyle = {
   opacity: "70%",
 };
 
+const lightningSquareStyle = {
+  background: "#003366",
+  opacity: "70%",
+  backgroundImage: `url(${lightningImage})`,
+  backgroundSize: "contain",
+};
+
 const game = new StormChess();
 
 export default function Board() {
   const [status, setStatus] = useState(game.status());
   const [position, setPosition] = useState("start");
-  const [squareStyles, setSquareStyles] = useState({});
   const [orientation, setOrientation] = useState("white");
   const [autoFlipOn, setAutoFlipOn] = useState(false);
+  const [possibleMoves, setPossibleMoves] = useState([]);
+  const [lightningSquares, setLightningSquares] = useState([]);
 
-  const squareStyling = ({ possibleMoves }) => {
-    return {
-      ...Object.fromEntries(
-        possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
-      ),
-      ...Object.fromEntries(
-        status.zappedSquares.map((zappedSquare) => [
-          zappedSquare,
-          zappedSquareStyle,
-        ])
-      ),
-    };
+  const squareStyles = {
+    ...Object.fromEntries(
+      possibleMoves.map((possibleMove) => [possibleMove, possibleMoveStyle])
+    ),
+    ...Object.fromEntries(
+      status.zappedSquares.map((zappedSquare) => [
+        zappedSquare,
+        zappedSquareStyle,
+      ])
+    ),
+    ...Object.fromEntries(
+      lightningSquares.map((lightningSquare) => [
+        lightningSquare,
+        lightningSquareStyle,
+      ])
+    ),
   };
 
+  useEffect(() => {
+    setLightningSquares(status.zappedSquares);
+    setTimeout(() => setLightningSquares([]), 1500);
+  }, [status.stormLevel, status.zappedSquares]);
+
   const onMouseOverSquare = (square) => {
-    setSquareStyles(
-      squareStyling({
-        possibleMoves: game.moves(square),
-      })
-    );
+    setPossibleMoves(game.moves(square));
   };
 
   const onMouseOutSquare = () => {
-    setSquareStyles(
-      squareStyling({
-        possibleMoves: [],
-      })
-    );
+    setPossibleMoves([]);
   };
 
   const onDrop = ({ sourceSquare, targetSquare }) => {
@@ -62,14 +72,18 @@ export default function Board() {
     if (move === null) return;
     setPosition(game.fen());
     setStatus(game.status());
-    setSquareStyles(
-      squareStyling({
-        possibleMoves: [],
-      })
-    );
+    setPossibleMoves([]);
     if (autoFlipOn) {
       setOrientation(game.status().playerToMove === "b" ? "black" : "white");
     }
+  };
+
+  const resetBoard = () => {
+    game.reset();
+    setPosition(game.fen());
+    setStatus(game.status());
+    setPossibleMoves([]);
+    setLightningSquares([]);
   };
 
   return (
@@ -90,16 +104,7 @@ export default function Board() {
         setOrientation={setOrientation}
         autoFlipOn={autoFlipOn}
         setAutoFlipOn={setAutoFlipOn}
-        resetBoard={() => {
-          game.reset();
-          setPosition(game.fen());
-          setStatus(game.status());
-          setSquareStyles(
-            squareStyling({
-              possibleMoves: [],
-            })
-          );
-        }}
+        resetBoard={resetBoard}
       />
     </Flex>
   );
