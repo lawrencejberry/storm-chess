@@ -22,10 +22,13 @@ export default function Panel({
   const turnsBetweenStorms =
     stormTurns[status.stormLevel] - (stormTurns[status.stormLevel - 1] || 0);
   return (
-    <BorderBox marginX={16} padding={4}>
+    <BorderBox width={256} marginX={16} padding={4}>
       <p>Player to move: {status.playerToMove === "b" ? "Black" : "White"}</p>
       <p>Turn: {Math.floor(status.turn)}</p>
-      <p>Turns until next storm: {turnsUntilNextStorm}</p>
+      <p>
+        Turns until next storm:{" "}
+        {isNaN(turnsUntilNextStorm) ? "∞" : turnsUntilNextStorm}
+      </p>
       <ProgressBar
         marginBottom={4}
         progress={(turnsUntilNextStorm * 100) / turnsBetweenStorms}

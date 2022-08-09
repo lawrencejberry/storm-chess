@@ -130,7 +130,7 @@ const StormChess = function () {
 
   // Public API
   return {
-    ...BaseChess,
+    __proto__: BaseChess,
     move: move,
     moves: moves,
     status: status,

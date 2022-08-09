@@ -23,7 +23,7 @@ const lightningSquareStyle = {
   backgroundSize: "contain",
 };
 
-const game = new StormChess();
+const game = StormChess();
 
 export default function Board() {
   const [status, setStatus] = useState(game.status());
